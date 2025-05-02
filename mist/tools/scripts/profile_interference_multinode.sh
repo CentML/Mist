@@ -39,17 +39,18 @@ run_multinode_profiling() {
             ${EXTRA_ARGS} >> stdout.log 2>&1"
 }
 
-# run_multinode_profiling 4 8 8 4
-# run_multinode_profiling 4 8 4 4
-# run_multinode_profiling 4 8 2 4
-# run_multinode_profiling 4 8 1 4
+# Uncomment / Comment out as you need
 
-# run_multinode_profiling 2 8 8 2
-# run_multinode_profiling 2 8 4 2
-# run_multinode_profiling 2 8 2 2
-# run_multinode_profiling 2 8 1 2
+run_multinode_profiling 4 8 8 4
+run_multinode_profiling 4 8 4 4
+run_multinode_profiling 4 8 2 4
+run_multinode_profiling 4 8 1 4
+
+run_multinode_profiling 2 8 8 2
+run_multinode_profiling 2 8 4 2
+run_multinode_profiling 2 8 2 2
+run_multinode_profiling 2 8 1 2
 
 run_multinode_profiling 1 8 8 1
 run_multinode_profiling 1 8 4 1
 run_multinode_profiling 1 8 2 1
-

@@ -25,7 +25,11 @@ run_profiling() {
         ${EXTRA_ARGS} >> stdout.log 2>&1
 }
 
-# run_profiling 1 8 8 1
-# run_profiling 1 8 4 1
+# # Profile on 1 node with 8 GPUs
+run_profiling 1 8 8 1
+run_profiling 1 8 4 1
 run_profiling 1 8 2 1
 
+# Profile on 1 node with 4 GPUs
+# run_profiling 1 4 4 1
+# run_profiling 1 4 2 1

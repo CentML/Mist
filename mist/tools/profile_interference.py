@@ -31,25 +31,38 @@ from mist.utils.memory import cuda_empty_cache
 # os.environ["NCCL_CREATE_THREAD_CONTEXT"] = "1"
 
 # =====================================================================
+# These reference values are just used for creating the benchmarking shapes.
+
+# TFLOPS REFS are from the corresponding specs.
 TFLOPS_REFS = {
     "a10g": 31.4,
     "l4": 30.29,
+    "l40s": 181.05,
     "v100-sxm2-32gb": 125,
     "v100-sxm2-16gb": 125,
     "a100-sxm4-40gb": 312,
 }
 
+# G2G BANDWIDTH REFS are the throughput when all GPUs in a node are 
+# conducting communication with each other. These can be rough values
+# as they are just used for creating the benchmarking shapes.
 G2G_BANDWIDTH_REFS = {
     "a10g": 6.0,
     "l4": 6.0,
+    "l40s": 15.0,
     "v100-sxm2-32gb": 120,
     "v100-sxm2-16gb": 120,
     "a100-sxm4-40gb": 240,
 }
 
+# C2G BANDWIDTH REFS are the throughput when all GPUs in a node are 
+# conducting communication with the CPU. Note this value may be 
+# significantly lower than the theoretical value that you can get
+# from the PCIe spec.
 C2G_BANDWIDTH_REFS = {
     "a10g": 10,
     "l4": 6,
+    "l40s": 10,
     "v100-sxm2-32gb": 6,
     "v100-sxm2-16gb": 3,
     "a100-sxm4-40gb": 5,

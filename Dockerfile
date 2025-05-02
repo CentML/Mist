@@ -27,7 +27,7 @@ RUN git clone https://github.com/NVIDIA/apex && \
     git checkout bae1f93d033716dc9115a0baf7bcda328addabe9 && \
     pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" ./
 
-# Install requirements for Megatron
+# [Optional if you don't want to benchmark Megatron] Install requirements for Megatron
 RUN apt-get install -y cmake
 RUN pip install nvidia-cudnn-cu12==8.9.7.29
 ENV CUDNN_PATH=/usr/local/lib/python3.10/dist-packages/nvidia/cudnn/
@@ -35,7 +35,7 @@ RUN echo 'export CUDNN_PATH=/usr/local/lib/python3.10/dist-packages/nvidia/cudnn
 RUN pip install git+https://github.com/NVIDIA/TransformerEngine.git@release_v1.3
 RUN pip install pybind11
 
-# Install requirements for DeepSpeed
+# [Optional if you don't want to benchmark DeepSpeed] Install requirements for DeepSpeed
 RUN pip install deepspeed==0.12.6
 
 # Install requirements
