@@ -235,10 +235,31 @@ The results are under `/workspace/benchmark/mist/benchmark-tuning-time/results`.
 
 ### Profile Networking and Overlap Params [Est. Time: 50mins for 8xL4s]
 
-We first profile the networking and overlapping params. 
+Before you start, note that we encourage/recommend to set up the GPU frequency (Please refer to Step 2.2), which makes our profiling more accurate compared to the actual running (in the same constraints).
+
+If you are using a GPU that is not added in our tested list, please run the following command to get the GPU name.
+And then update the rough TFLOPs, G2G_BANDWIDTH, and C2G_BANDWIDTH in the `mist/tools/profile_interference.py` file.
+```bash
+python3 -c "import torch; print(torch.cuda.get_device_name(0).split(' ')[-1].lower())"
+```
+
+We first profile the networking and overlapping params. Please read this script first to make sure you are using the correct number of GPUs as your cluster may have different number of GPUs per node.
 ```bash
 cd /workspace/mist/tools/
 bash scripts/profile_interference_single_node.sh
+```
+
+This may take long (~1 hour or more depending on the GPU). You can see the progress in the `mist/tools/stdout.log` file.
+And the results are saved in multiple `mist/tools/results/bandwidth-{GPUNAME}-xxxx.json` files.
+
+Then let's merge them into a single file. The output file is `results/bandwidth-merged-{GPUNAME}.json`.
+```bash
+python merge_json_results.py results/bandwidth-l4*.json
+```
+
+Run the interference estimation.
+```bash
+python optimize.py results/bandwidth-merged-l4.json
 ```
 
 The outputs of it should be similar to:
@@ -253,13 +274,13 @@ Steps:
 1. Create a new experiment template under `/workspace/benchmark/mist/configs/experiment/`. For example, if I am using A10 GPUs, I should do:
     ```bash
     cd /workspace/benchmark/mist/configs/experiment/
-    cp template-l4.yaml template-a10g.yaml
+    cp template-l4.yaml template-[GPUNAME].yaml
     ```
     Please make sure the `template-xxx` -> `xxx` is the simplified device name, which can be got by
     ```bash
     python3 -c "import torch; print(torch.cuda.get_device_name(0).split(' ')[-1].lower())"
     ```
-2. Update `template-a10g.yaml`:
+2. Update `template-[GPUNAME].yaml`:
     - Copy the GPU-GPU, CPU-GPU, GPU-CPU, and Interence params into the `hardware` block in the template.
     - Update the `nvlink` and `memory_capacity`, where `memory_capacity` is the size of device memories (in GB).
 3. Update `/workspace/benchmark/mist/experiment/run.py`.
@@ -300,7 +321,9 @@ And each machine should be able to directly ssh to another one through `worker-%
 
 Similarly, we need to first profile the network and overlap params. Please refer to `/workspace/mist/tools/scripts/profile_interference_multinode.sh` for details. [This may take a long time as we apply a relatively fine-grained network bandwidth estimation method.]
 
-After getting the networking and overlap param, repeat the steps above to update the `template-a10g.yaml` and `/workspace/benchmark/mist/experiment/run.py` on all machines.
+Similarly, aggregate and merge all the results into a single file and then run the interference estimation.
+
+After getting the networking and overlap param, repeat the steps above to update the `template-[GPUNAME].yaml` and `/workspace/benchmark/mist/experiment/run.py` on all machines.
 
 ### Run the experiments
 
